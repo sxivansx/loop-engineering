@@ -8,7 +8,7 @@
 
 Loop engineering is the practice of designing the system that prompts an AI agent for you, instead of prompting it yourself, turn by turn. You define a goal and a stop condition once. The loop finds the work, does it, verifies it with a separate agent, records what happened, and runs again until the goal is met.
 
-This repo is an installable [Claude Code](https://claude.com/claude-code) skill. Run `/loop-engineering` with a goal and it scaffolds the whole loop for you: a state file, a maker agent, an independent checker, and a trigger, with the guardrails built in.
+This repo is an installable [Claude Code](https://claude.com/claude-code) skill. Run `/loop-engineering` inside any existing repo and it scaffolds the whole loop for you: it reads how the project already tests, builds, and tracks work, then drops in a state file, a maker agent, an independent checker, and a trigger, with the guardrails built in.
 
 ## Install
 
