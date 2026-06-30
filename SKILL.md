@@ -1,6 +1,6 @@
 ---
 name: loop-engineering
-description: Use when the user wants to "set up a loop", build a self-running or run-until-done agent, automate a recurring engineering task (triage, keep-CI-green, dependency bumps, backlog burndown), or stop hand-prompting an agent turn by turn. Sets up an autonomous engineering loop in the current project: a self-running system that discovers work, runs a maker agent and a separate checker agent, records state on disk, and re-triggers until a verifiable stop condition is met.
+description: Use when the user wants to "set up a loop", build a self-running or run-until-done agent, automate a recurring engineering task (triage, keep-CI-green, dependency bumps, backlog burndown), or stop hand-prompting an agent turn by turn. Sets up an autonomous engineering loop in the current project. It discovers work, runs a maker agent and a separate checker agent, records state on disk, and re-triggers until a verifiable stop condition is met.
 argument-hint: [what the loop should do]
 ---
 
