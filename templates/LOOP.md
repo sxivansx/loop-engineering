@@ -7,6 +7,13 @@
 
 _The loop reads this file at the start of every cycle and writes it at the end._
 
+## Rules (every agent in this loop follows these)
+- One item per cycle. Finish it or block it, never start a second.
+- The maker never marks its own work done. Only the checker moves an item to `## Done`, and only after running the real check.
+- Verify by running the command, not by reading a description. No green, no Done.
+- When you cannot verify or cannot proceed, write it to `## Blocked` with the reason and stop. Do not guess past it.
+- Nothing irreversible (merge, deploy, delete, spend) happens without the human gate above.
+
 ## Open
 <!-- Work discovered this cycle, not yet done. One discrete, checkable item per line. -->
 
