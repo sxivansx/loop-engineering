@@ -30,10 +30,11 @@ It sets up:
 
 ```
 your-project/
-├── LOOP.md                 # goal, stop condition, Open/Done/Blocked
+├── LOOP.md                 # goal, stop condition, bounds, rules, Open/Done/Blocked
 ├── .claude/agents/
 │   ├── loop-maker.md       # does one unit of work
-│   └── loop-checker.md     # verifies it, independently
+│   ├── loop-checker.md     # verifies it, independently
+│   └── loop-monitor.md     # watches the whole loop for drift + runaway
 └── trigger: /goal, /loop, a scheduled task, or a GitHub Action
 ```
 
@@ -52,7 +53,9 @@ Every loop is the same six parts. Learn the parts, not one tool's syntax.
 | **Checker** | verifies the maker independently | a *different* subagent that runs the real check |
 | **Stop condition** | ends the loop | a verifiable command, not a vibe |
 
-Optional: **worktrees** isolate parallel makers so they never edit the same file, and **MCP connectors** let the loop open PRs, update tickets, or post status. Add them only when the goal needs parallelism or external side effects.
+For any loop that runs unattended, add a **monitor**: an oversight agent that watches the whole loop and halts it on drift (going off-goal), spinning (no net progress), or a crossed bound (too many cycles, too long). The maker and checker keep each item correct; the monitor keeps the loop pointed at the goal so it cannot quietly wander off and run for hours.
+
+Optional add-ons: **worktrees** isolate parallel makers so they never edit the same file, and **MCP connectors** let the loop open PRs, update tickets, or post status. Add them only when the goal needs parallelism or external side effects.
 
 ## Guardrails
 
@@ -81,6 +84,8 @@ A loop uses good prompts and good context inside it. Loop engineering wraps them
 **How is it different from prompt engineering?** Prompt engineering optimizes one instruction for one response. Loop engineering designs the system that issues many prompts over time and decides what to do next. Prompting is a part of a loop.
 
 **What is the maker and checker split?** The maker does the work; a separate checker verifies it against the stop condition and the tests. Splitting them stops the loop from grading its own homework, the most common way autonomous agents ship broken work.
+
+**What stops the loop from going off the rails?** A monitor agent runs alongside the maker and checker and watches the whole loop, not just each item. If the work drifts off the goal, stops making progress, or crosses a bound you set (max cycles or time), the monitor halts the loop and escalates to a human instead of letting it run for hours.
 
 **Does it run unattended?** It can, but a human gate stays on anything irreversible (merging, deploying, deleting, spending money). The loop prepares and verifies the change; a person approves what can't be undone.
 

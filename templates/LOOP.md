@@ -4,6 +4,7 @@
 **Stop condition:** <a verifiable check that means done, e.g. `npm test` exits 0 and `## Open` is empty>
 **Cadence:** <on-demand `/loop` | daily scheduled task | on push via a GitHub Action>
 **Human gate:** <what a person must approve before it ships, e.g. PR merge, deploy>
+**Bounds:** <hard stop so the loop can't run away, e.g. escalate after 10 cycles or 2 hours with nothing new reaching Done>
 
 _The loop reads this file at the start of every cycle and writes it at the end._
 
@@ -13,6 +14,7 @@ _The loop reads this file at the start of every cycle and writes it at the end._
 - Verify by running the command, not by reading a description. No green, no Done.
 - When you cannot verify or cannot proceed, write it to `## Blocked` with the reason and stop. Do not guess past it.
 - Nothing irreversible (merge, deploy, delete, spend) happens without the human gate above.
+- Stay on the goal above. Work that does not serve it is drift; the monitor halts the loop and escalates it.
 
 ## Open
 <!-- Work discovered this cycle, not yet done. One discrete, checkable item per line. -->
