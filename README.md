@@ -74,7 +74,7 @@ Every loop is built from the same six parts. Learn the parts, not any one tool's
 
 | Primitive | Role in the loop | Example mechanism |
 |---|---|---|
-| **Trigger** | starts each cycle, on a schedule or an event | `/loop`, a scheduled task, a hook, a GitHub Action |
+| **Trigger** | starts each cycle, on a schedule or an event | `/goal`, `/loop`, a scheduled task, a hook, a GitHub Action |
 | **State** | the loop's memory between cycles, stored on disk | a `LOOP.md` file, or an issue tracker via MCP |
 | **Discovery** | finds what to work on this cycle | a triage step reading CI, issues, diffs, a queue |
 | **Maker** | does one unit of the work | a subagent that implements a single item |
@@ -129,7 +129,7 @@ The maker is the agent that does the work. The checker is a separate agent that 
 It can run unattended, but a human gate stays on anything irreversible: merging, deploying, deleting, or spending money. The loop prepares the change and verifies it; a person approves the part that cannot be undone.
 
 ### What tools does loop engineering work with?
-The six primitives are tool-agnostic. This skill targets Claude Code (using `/loop`, scheduled tasks, subagents, hooks, MCP, and GitHub Actions), but the same structure (trigger, state, discovery, maker, checker, stop condition) applies in any agent platform that can schedule a run and isolate work.
+The six primitives are tool-agnostic. This skill targets Claude Code (using `/goal` to run until a condition is met, plus `/loop`, scheduled tasks, subagents, hooks, MCP, and GitHub Actions), but the same structure (trigger, state, discovery, maker, checker, stop condition) applies in any agent platform that can schedule a run and isolate work.
 
 ### What happens when the loop gets stuck?
 It writes the item to a `Blocked` section in the state file with the reason and stops working that item. It does not guess past a check it cannot pass. A human picks up what is blocked on the next pass.

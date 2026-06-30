@@ -12,7 +12,7 @@ A loop is built from six primitives and nothing else. Set up only the ones the g
 
 | Primitive | Role in the loop | Claude Code mechanism |
 |---|---|---|
-| **Trigger** | starts each cycle, on a schedule or an event | `/loop`, scheduled tasks, hooks, GitHub Actions |
+| **Trigger** | starts each cycle, on a schedule or an event | `/goal` (work across turns until a condition is met), `/loop`, scheduled tasks, hooks, GitHub Actions |
 | **State** | the loop's memory between cycles, on disk | a markdown file (`LOOP.md`) or an issue tracker via MCP |
 | **Discovery** | finds what to work on this cycle | a triage step that reads CI, issues, diffs, a queue |
 | **Maker** | does one unit of the work | a subagent in `.claude/agents/` |
@@ -25,7 +25,7 @@ Two optional add-ons: **worktrees** (`git worktree`) isolate parallel makers so 
 
 Follow these steps when invoked. Confirm with the user before anything with side effects: scheduled jobs, pushes, ticket writes, deploys.
 
-1. **Pin the goal and the stop condition.** Ask the user for the loop's one goal and the *verifiable* condition that means done (tests exit 0, the queue is empty, zero failing checks). A loop with no stop condition is the one thing you must never ship. If the user can't name one, set a bounded fallback (stop after N cycles) and say so out loud.
+1. **Pin the goal and the stop condition.** Ask the user for the loop's one goal and the *verifiable* condition that means done (tests exit 0, the queue is empty, zero failing checks). A loop with no stop condition is the one thing you must never ship. If the user can't name one, set a bounded fallback (stop after N cycles) and say so out loud. In Claude Code, `/goal <condition>` makes this executable: Claude keeps working across turns until the condition is met, and `/goal clear` ends it early.
 
 2. **Write the state file.** Copy `${CLAUDE_SKILL_DIR}/templates/LOOP.md` to the repo root and fill in goal, stop condition, cadence, and the human gate. It has three living sections the loop maintains: `## Open` (found, not done), `## Done` (with the evidence that verified it), `## Blocked` (needs a human). The loop reads this first every cycle and writes it last.
 
@@ -40,7 +40,8 @@ Follow these steps when invoked. Confirm with the user before anything with side
 7. **Wire connectors (optional).** If the loop must open PRs, update tickets, or post status, connect the matching MCP server. Otherwise the loop's output stays local and a human relays it.
 
 8. **Set the trigger.** Pick the lightest mechanism that fits the cadence:
-   - on demand, run-until-done in this session → `/loop`
+   - run until the goal is met, in this session → `/goal <stop condition>` (Claude works across turns until the condition is true; `/goal clear` ends it early)
+   - repeat on a cadence, on demand → `/loop`
    - periodic and unattended → a scheduled task (or cron / a GitHub Action for CI-side loops)
    - react to an event (push, PR, file change) → a hook or a GitHub Action
 
