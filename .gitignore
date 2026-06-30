@@ -12,3 +12,6 @@ Thumbs.db
 
 # Local Claude Code context (not part of the published skill)
 .claude/
+
+# Blog lives on dev.to, not in the public repo
+blog/
