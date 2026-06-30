@@ -39,13 +39,19 @@ This runs inside an existing project. Follow these steps when invoked. Confirm w
 
 6. **Create the monitor subagent (recommended for any unattended loop).** Copy `${CLAUDE_SKILL_DIR}/templates/loop-monitor.md` to `.claude/agents/loop-monitor.md`, and run it every few cycles or on a slower timer than the loop. It watches the loop as a whole rather than any single item: it checks whether the loop is still converging on the goal, and it halts the loop and escalates to a human on drift (work that does not serve the goal), spinning (no net progress, items bouncing between Open and Blocked), or a crossed bound. This is what stops a loop from quietly wandering off and running for hours.
 
-7. **Define discovery.** Write the triage step that fills `## Open` each cycle from where this project's work actually lives (CI status, open issues, recent commits, a work queue), and how it turns findings into discrete, individually checkable items. Make it deterministic wherever you can.
+7. **Set the code-review and security-audit cadence (ask the user).** Ask how often the loop should run each, and record both in `LOOP.md`. Offer clear options and always include **never**:
+   - **Code review** (`/code-review`): every change, before each PR or merge, every N cycles, weekly, or never.
+   - **Security audit** (`/security-review`): every change, before each PR or merge, weekly, monthly, or never.
 
-8. **Choose isolation (optional).** If more than one maker runs per cycle, give each its own `git worktree` and branch so they never write the same file. One worktree per item.
+   At the chosen cadence the loop runs that built-in pass and files what it finds into `## Open` as new work items, so the maker fixes them and the checker verifies the fix. If the user picks never, skip that pass entirely and record `never` in `LOOP.md` so the loop does not reintroduce it.
 
-9. **Wire connectors (optional).** If the loop must open PRs, update tickets, or post status, connect the matching MCP server. Otherwise the loop's output stays local and a human relays it.
+8. **Define discovery.** Write the triage step that fills `## Open` each cycle from where this project's work actually lives (CI status, open issues, recent commits, a work queue), and how it turns findings into discrete, individually checkable items. Make it deterministic wherever you can.
 
-10. **Set the trigger.** Pick the lightest mechanism that fits the cadence:
+9. **Choose isolation (optional).** If more than one maker runs per cycle, give each its own `git worktree` and branch so they never write the same file. One worktree per item.
+
+10. **Wire connectors (optional).** If the loop must open PRs, update tickets, or post status, connect the matching MCP server. Otherwise the loop's output stays local and a human relays it.
+
+11. **Set the trigger.** Pick the lightest mechanism that fits the cadence:
    - run until the goal is met, in this session → `/goal <stop condition>` (Claude works across turns until the condition is true; `/goal clear` ends it early)
    - repeat on a cadence, on demand → `/loop`
    - periodic and unattended → a scheduled task (or cron / a GitHub Action for CI-side loops)
@@ -53,7 +59,7 @@ This runs inside an existing project. Follow these steps when invoked. Confirm w
 
    Confirm with the user before creating any scheduled job.
 
-11. **Dry-run, verify, then enable.** Run one cycle by hand. Read everything it produced. Confirm the checker actually blocks bad output and that state was written. Only then turn on the trigger.
+12. **Dry-run, verify, then enable.** Run one cycle by hand. Read everything it produced. Confirm the checker actually blocks bad output and that state was written. Only then turn on the trigger.
 
 ## Guardrails (non-negotiable)
 

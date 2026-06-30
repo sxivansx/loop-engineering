@@ -5,6 +5,8 @@
 **Cadence:** <on-demand `/loop` | daily scheduled task | on push via a GitHub Action>
 **Human gate:** <what a person must approve before it ships, e.g. PR merge, deploy>
 **Bounds:** <hard stop so the loop can't run away, e.g. escalate after 10 cycles or 2 hours with nothing new reaching Done>
+**Code review:** <how often `/code-review` runs: every change | before each PR | every N cycles | weekly | never>
+**Security audit:** <how often `/security-review` runs: every change | before each PR | weekly | monthly | never>
 
 _The loop reads this file at the start of every cycle and writes it at the end._
 

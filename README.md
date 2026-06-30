@@ -24,7 +24,7 @@ That makes `/loop-engineering` available in every project. For one project only,
 /loop-engineering keep the main branch's CI green
 ```
 
-Claude pins the goal and a verifiable stop condition, writes the state file, creates the maker and checker agents, picks a trigger, and runs one cycle by hand before anything is enabled. Nothing with side effects (scheduled jobs, pushes, deploys) happens without your confirmation.
+Claude pins the goal and a verifiable stop condition, writes the state file, creates the maker, checker, and monitor agents, asks how often you want code review and security audits (down to never), picks a trigger, and runs one cycle by hand before anything is enabled. Nothing with side effects (scheduled jobs, pushes, deploys) happens without your confirmation.
 
 It sets up:
 
@@ -86,6 +86,8 @@ A loop uses good prompts and good context inside it. Loop engineering wraps them
 **What is the maker and checker split?** The maker does the work; a separate checker verifies it against the stop condition and the tests. Splitting them stops the loop from grading its own homework, the most common way autonomous agents ship broken work.
 
 **What stops the loop from going off the rails?** A monitor agent runs alongside the maker and checker and watches the whole loop, not just each item. If the work drifts off the goal, stops making progress, or crosses a bound you set (max cycles or time), the monitor halts the loop and escalates to a human instead of letting it run for hours.
+
+**Does it review or security-audit the code?** At setup it asks how often you want a code review (`/code-review`) and a security audit (`/security-review`), with options down to never. At the cadence you pick, the loop runs that pass and turns anything it finds into new work items for the maker to fix and the checker to verify.
 
 **Does it run unattended?** It can, but a human gate stays on anything irreversible (merging, deploying, deleting, spending money). The loop prepares and verifies the change; a person approves what can't be undone.
 
