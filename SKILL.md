@@ -45,13 +45,15 @@ This runs inside an existing project. Follow these steps when invoked. Confirm w
 
    At the chosen cadence the loop runs that built-in pass and files what it finds into `## Open` as new work items, so the maker fixes them and the checker verifies the fix. If the user picks never, skip that pass entirely and record `never` in `LOOP.md` so the loop does not reintroduce it.
 
-8. **Define discovery.** Write the triage step that fills `## Open` each cycle from where this project's work actually lives (CI status, open issues, recent commits, a work queue), and how it turns findings into discrete, individually checkable items. Make it deterministic wherever you can.
+8. **Install the `/sync-loop` command.** Copy `${CLAUDE_SKILL_DIR}/templates/sync-loop.md` to `.claude/commands/sync-loop.md`. This is the user's re-entry point: when they come back to the project they run `/sync-loop`, get a plain-language catch-up (what reached Done with evidence, what's Blocked and what questions need answering, what's still Open, how the loop tracks against its bounds), and then the loop resumes on the next open item through the normal maker → checker cycle. Each sync appends a dated entry to a `## Sync log` in `LOOP.md` so the next sync knows where to diff from.
 
-9. **Choose isolation (optional).** If more than one maker runs per cycle, give each its own `git worktree` and branch so they never write the same file. One worktree per item.
+9. **Define discovery.** Write the triage step that fills `## Open` each cycle from where this project's work actually lives (CI status, open issues, recent commits, a work queue), and how it turns findings into discrete, individually checkable items. Make it deterministic wherever you can.
 
-10. **Wire connectors (optional).** If the loop must open PRs, update tickets, or post status, connect the matching MCP server. Otherwise the loop's output stays local and a human relays it.
+10. **Choose isolation (optional).** If more than one maker runs per cycle, give each its own `git worktree` and branch so they never write the same file. One worktree per item.
 
-11. **Set the trigger.** Pick the lightest mechanism that fits the cadence:
+11. **Wire connectors (optional).** If the loop must open PRs, update tickets, or post status, connect the matching MCP server. Otherwise the loop's output stays local and a human relays it.
+
+12. **Set the trigger.** Pick the lightest mechanism that fits the cadence:
    - run until the goal is met, in this session → `/goal <stop condition>` (Claude works across turns until the condition is true; `/goal clear` ends it early)
    - repeat on a cadence, on demand → `/loop`
    - periodic and unattended → a scheduled task (or cron / a GitHub Action for CI-side loops)
@@ -59,7 +61,7 @@ This runs inside an existing project. Follow these steps when invoked. Confirm w
 
    Confirm with the user before creating any scheduled job.
 
-12. **Dry-run, verify, then enable.** Run one cycle by hand. Read everything it produced. Confirm the checker actually blocks bad output and that state was written. Only then turn on the trigger.
+13. **Dry-run, verify, then enable.** Run one cycle by hand. Read everything it produced. Confirm the checker actually blocks bad output and that state was written. Only then turn on the trigger.
 
 ## Guardrails (non-negotiable)
 
@@ -76,10 +78,12 @@ This runs inside an existing project. Follow these steps when invoked. Confirm w
 your-project/
 ├── LOOP.md                   # goal, stop condition, bounds, rules, Open/Done/Blocked
 ├── .claude/
-│   └── agents/
-│       ├── loop-maker.md      # does one unit of work
-│       ├── loop-checker.md    # verifies it, independently
-│       └── loop-monitor.md    # watches the whole loop for drift + runaway
+│   ├── agents/
+│   │   ├── loop-maker.md      # does one unit of work
+│   │   ├── loop-checker.md    # verifies it, independently
+│   │   └── loop-monitor.md    # watches the whole loop for drift + runaway
+│   └── commands/
+│       └── sync-loop.md       # /sync-loop: catch the user up, then resume the loop
 └── (trigger: /goal, /loop, a scheduled task, or a GitHub Action)
 ```
 
@@ -98,4 +102,5 @@ your-project/
 - `templates/loop-maker.md`: the maker subagent definition.
 - `templates/loop-checker.md`: the checker subagent definition.
 - `templates/loop-monitor.md`: the monitor subagent definition (drift and runaway guard).
+- `templates/sync-loop.md`: the `/sync-loop` command to copy into the target repo — the user's re-entry point after time away (catch-up summary, then resume).
 - `examples/keep-ci-green.md`: a complete worked loop, from goal to trigger.

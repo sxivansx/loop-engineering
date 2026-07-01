@@ -35,6 +35,8 @@ your-project/
 │   ├── loop-maker.md       # does one unit of work
 │   ├── loop-checker.md     # verifies it, independently
 │   └── loop-monitor.md     # watches the whole loop for drift + runaway
+├── .claude/commands/
+│   └── sync-loop.md        # /sync-loop: catch-up summary when you're back, then resume
 └── trigger: /goal, /loop, a scheduled task, or a GitHub Action
 ```
 

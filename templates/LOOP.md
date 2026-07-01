@@ -26,3 +26,6 @@ _The loop reads this file at the start of every cycle and writes it at the end._
 
 ## Blocked
 <!-- Needs a human. Say why. The loop does not guess past these. -->
+
+## Sync log
+<!-- Written by /sync-loop each time the user returns: date, HEAD commit, one-line status. The next sync diffs from the last entry here. -->
